@@ -1,0 +1,5 @@
+{
+  "browser": "chromium", 
+  "baseUrl": "https://tokero.dev",
+  "headless": false
+}
