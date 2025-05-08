@@ -1,3 +1,4 @@
+using Allure.NUnit;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using tokero_automation_tests.tokero_automation_tests.Pages;
@@ -5,7 +6,7 @@ using tokero_automation_tests.tokero_automation_tests.Utils;
 
 namespace tokero_automation_tests.tokero_automation_tests.Tests;
 
-[TestFixture]
+[AllureNUnit]
 public class PolicyTests
 {
     private BrowserFactory _browserFactory;
@@ -25,7 +26,6 @@ public class PolicyTests
     {
         await _browserFactory.DisposeAsync();
     }
-
 
     [Test]
     public async Task ValidatePoliciesHeaderTitles()
