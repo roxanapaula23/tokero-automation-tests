@@ -1,5 +1,5 @@
 {
-  "browser": "firefox", 
+  "browser": "firefox",
   "baseUrl": "https://tokero.dev",
   "headless": true
 }
