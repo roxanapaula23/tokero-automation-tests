@@ -1,40 +1,40 @@
-// Utils/TestBase.cs
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using tokero_automation_tests.tokero_automation_tests.Utils;
 
-namespace tokero_automation_tests.tokero_automation_tests.Utils
+namespace tokero_automation_tests.tokero_automation_tests.Tests
 {
     public abstract class TestBase
     {
-        protected BrowserFactory BrowserFactory;
-        protected IBrowser Browser;
-        protected IBrowserContext Context;
-        protected static ExtentReports Extent;
+        private BrowserFactory? _browserFactory;
+        private IBrowser? _browser;
+        private static ExtentReports? _extent;
+        
         protected ExtentTest Test;
+        protected IBrowserContext Context;
 
         [OneTimeSetUp]
         public void InitializeReport()
         {
-            if (Extent != null) return;
+            if (_extent != null) return;
 
             var reportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestReports", "ExtentReport.html");
             Directory.CreateDirectory(Path.GetDirectoryName(reportPath)!);
 
             var sparkReporter = new ExtentSparkReporter(reportPath);
-            Extent = new ExtentReports();
-            Extent.AttachReporter(sparkReporter);
+            _extent = new ExtentReports();
+            _extent.AttachReporter(sparkReporter);
         }
 
         [SetUp]
         public async Task SetUpTestAsync()
         {
-            BrowserFactory = new BrowserFactory();
-            Browser = await BrowserFactory.GetBrowserAsync();
-            Context = await Browser.NewContextAsync();
-            Test = Extent.CreateTest(TestContext.CurrentContext.Test.Name);
+            _browserFactory = new BrowserFactory();
+            _browser = await _browserFactory.GetBrowserAsync();
+            Context = await _browser.NewContextAsync();
+            Test = _extent.CreateTest(TestContext.CurrentContext.Test.Name);
         }
 
         [TearDown]
@@ -48,13 +48,13 @@ namespace tokero_automation_tests.tokero_automation_tests.Utils
             else if (status == NUnit.Framework.Interfaces.TestStatus.Passed)
                 Test.Pass("Test passed.");
 
-            await BrowserFactory.DisposeAsync();
+            await _browserFactory.DisposeAsync();
         }
 
         [OneTimeTearDown]
         public void FlushReport()
         {
-            Extent.Flush();
+            _extent.Flush();
         }
     }
 }
