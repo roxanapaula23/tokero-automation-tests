@@ -5,8 +5,8 @@ namespace tokero_automation_tests.tokero_automation_tests.Pages;
 public class FooterPage
 {
     private readonly IPage _page;
-    private readonly string _acceptCookiesSelector = "button.cookieConsentPopup_acceptCookiesBtn__w2Y0c";
-    private readonly string _policiesLinkSelector = "a.footerLink_linkItem__vHH3t[href^='/'][href$='/policies/']";
+    private readonly string _acceptCookiesSelector = "button:has-text('Accept all cookies')";
+    private readonly string _policiesLinkSelector = "a[href$='/policies/']";
 
     public FooterPage(IPage page)
     {

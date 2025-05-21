@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Microsoft.Playwright;
 using NUnit.Framework;
 using tokero_automation_tests.tokero_automation_tests.Pages;
-using tokero_automation_tests.tokero_automation_tests.Utils;
 
 namespace tokero_automation_tests.tokero_automation_tests.Tests;
 

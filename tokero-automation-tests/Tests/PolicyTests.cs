@@ -1,4 +1,3 @@
-using AventStack.ExtentReports.Model;
 using NUnit.Framework;
 using tokero_automation_tests.tokero_automation_tests.Pages;
 
@@ -13,15 +12,9 @@ public class PolicyTests : TestBase
         try
         {
             var page = await Context.NewPageAsync();
-            await page.GotoAsync("https://tokero.dev/en/");
-
-            var footerPage = new FooterPage(page);
-            await footerPage.AcceptCookiesIfVisibleAsync();
-
-            await page.EvaluateAsync("window.scrollTo(0, document.body.scrollHeight)");
-            await page.WaitForTimeoutAsync(1000);
-            await footerPage.NavigateToPoliciesPageAsync();
-
+            
+            await PageFlowHelper.NavigateToPoliciesPageWithSetupAsync(page, "en");
+            
             var policiesPage = new PoliciesPage(page);
             var policyLinks = await policiesPage.GetPolicyLinksAsync();
 

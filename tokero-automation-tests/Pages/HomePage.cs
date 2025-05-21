@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 
+namespace tokero_automation_tests.tokero_automation_tests.Pages;
+
 public class HomePage
 {
     private readonly IPage _page;
@@ -10,17 +12,15 @@ public class HomePage
         _page = page;
     }
 
-    private readonly string _dropDownToggle =
-        "button.languageSwitcher_dropdownToggle__YEf9b.languageSwitcher_topDropdownToggle__QXn26";
-
-    private readonly string _italianSelector = "button.languageSwitcher_dropdownMenuOptionBtn__NON0i >> text=IT";
-    private readonly string _germanSelector = "button.languageSwitcher_dropdownMenuOptionBtn__NON0i >> text=DE";
-    private readonly string _frenchSelector = "button.languageSwitcher_dropdownMenuOptionBtn__NON0i >> text=FR";
+    private readonly string _langToggleSelector = "xpath=//button[.//span[text()='EN']]";
+    private readonly string _italianSelector = "a[href='/it/']";
+    private readonly string _germanSelector = "a[href='/de/']";
+    private readonly string _frenchSelector = "a[href='/fr/']";
 
     public async Task SwitchLanguageAsync(string lang)
     {
-        await _page.WaitForSelectorAsync(_dropDownToggle);
-        await _page.Locator(_dropDownToggle).ClickAsync();
+        await _page.WaitForSelectorAsync(_langToggleSelector);
+        await _page.Locator(_langToggleSelector).ClickAsync();
 
         switch (lang.ToLowerInvariant())
         {
@@ -38,9 +38,6 @@ public class HomePage
             default:
                 throw new ArgumentException($"Unsupported language code: {lang}", nameof(lang));
         }
-
         await _page.WaitForURLAsync(new Regex($"/{lang}/", RegexOptions.IgnoreCase));
     }
-
-    public string CurrentUrl => _page.Url;
 }

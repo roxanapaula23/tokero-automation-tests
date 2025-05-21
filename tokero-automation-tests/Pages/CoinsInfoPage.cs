@@ -6,7 +6,7 @@ public class CoinsInfoPage
 {
     private readonly IPage _page;
 
-    private readonly string _coinsInfoLinkSelector = "a.footerLink_linkItem__vHH3t[title='Coins info']";
+    private readonly string _coinsInfoLinkSelector = "a[title='Coins info']";
     private readonly string _layer1ButtonSelector = "button:has-text('Layer1')";
     private readonly string _cardanoAdaLinkSelector = "a[href='/en/info/cardano-ada/']";
     private readonly string _cardanoLinkSelector = "a[href='https://cardano.org/']";
