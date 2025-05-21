@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using tokero_automation_tests.tokero_automation_tests.Constants;
 using tokero_automation_tests.tokero_automation_tests.Pages;
 
 namespace tokero_automation_tests.tokero_automation_tests.Tests;
@@ -9,10 +11,7 @@ namespace tokero_automation_tests.tokero_automation_tests.Tests;
 [TestFixture]
 public class PoliciesTests : TestBase
 {
-    [TestCase("en")]
-    [TestCase("it")]
-    [TestCase("fr")]
-    [TestCase("de")]
+   [TestCaseSource(typeof(SupportedLanguages), nameof(SupportedLanguages.All))]
     public async Task ValidatePoliciesTitles(string lang)
     {
         try
@@ -25,18 +24,22 @@ public class PoliciesTests : TestBase
             var policyTitles = await policiesPage.GetPolicyTitlesAsync();
 
             var rootDirectory = Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.FullName;
-            var filePath = Path.Combine(rootDirectory!, "tokero-automation-tests", "TestData", $"policy-titles-{lang}.txt");
-            var expectedPolicyTitles = (await File.ReadAllLinesAsync(filePath))
-                .Where(l => !string.IsNullOrWhiteSpace(l))
-                .ToList();
+            var filePath = Path.Combine(rootDirectory!, "tokero-automation-tests", "TestData", "policy-titles.json");
+            var jsonContent = await File.ReadAllTextAsync(filePath);
 
+            var allExpectedTitles = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonContent);
+            if (!allExpectedTitles.TryGetValue(lang, out var expectedPolicyTitles))
+            {
+                Assert.Fail($"Language '{lang}' not found in policy-titles.json.");
+            }
             Assert.That(policyTitles, Is.Not.Empty, "No policy titles were found.");
 
-            foreach (var expectedTitle in expectedPolicyTitles)
-            {
-                Assert.That(policyTitles.Contains(expectedTitle),
-                    $"Expected policy title '{expectedTitle}' was not found in the actual list.");
-            }
+            if (expectedPolicyTitles != null)
+                foreach (var expectedTitle in expectedPolicyTitles)
+                {
+                    Assert.That(policyTitles.Contains(expectedTitle),
+                        $"Expected policy title '{expectedTitle}' was not found in the actual list.");
+                }
 
             Test.Pass($"ValidatePoliciesTitles ({lang}) passed successfully.");
         }
@@ -47,10 +50,7 @@ public class PoliciesTests : TestBase
         }
     }
 
-    [TestCase("en")]
-    [TestCase("it")]
-    [TestCase("fr")]
-    [TestCase("de")]
+    [TestCaseSource(typeof(SupportedLanguages), nameof(SupportedLanguages.All))]
     public async Task ValidatePoliciesLinks(string lang)
     {
         try
